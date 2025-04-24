@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body style="background-color: #212726; color: aliceblue;">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="w-75">
+            <form action="" method="post" id="form">
+                <div class="mb-3">
+                    <label for="matiere" class="form-label">Matière</label>
+                    <input type="text" class="form-control" name="matiere" id="matiere">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" name="date" id="date" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="prof" class="form-label">Prof</label>
+                    <input type="text" name="prof" id="prof" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="Netudiants" class="form-label">Nombre d'étudiants</label>
+                    <input type="number" name="Netudiants" id="Netudiants" class="form-control">
+                </div>
+                <table>
+                    <thead>
+                        <th><label for="id" class="form-label">ID</label></th>
+                        <th><label for="massar" class="form-label">CodeMassar</label></th>
+                        <th><label for="prenom" class="form-label">Prénom</label></th>
+                        <th><label for="nom" class="form-label">Nom</label></th>
+                        <th><label for="note" class="form-label">Note</label></th>
+                        <th><label for="appreciation">Appréciation</label></th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" name="id1" id="id" value="1" disabled class="form-control"></td>
+                            <td><input type="text" name="massar1" id="massar" class="form-control"></td>
+                            <td><input type="text" name="prenom1" id="prenom" class="form-control"></td>
+                            <td><input type="text" name="nom1" id="nom" class="form-control"></td>
+                            <td><input type="number" name="note1" id="note" class="form-control" step="0.01" max="20" min="0"></td>
+                            <td>
+                                <select name="appreciation1" id="appreciation" disabled="disabled" class="form-select">
+                                    <option value="passable">Passable</option>
+                                    <option value="abien">Assez Bien</option>
+                                    <option value="bien">Bien</option>
+                                    <option value="tbien">Très bien</option>
+                                </select>
+                            </td>
+                            <td><button type="button" id="deleteRow" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Note Min</td>
+                            <td>0/20</td>
+                            <td>Note Max</td>
+                            <td>0/20</td>
+                            <td>Moyenne de classe</td>
+                            <td>0/20</td>
+                            <td><button type="button" id="addRow" class="btn btn-primary"><i class="bi bi-plus-circle"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <input type="submit" id="generatePDF" value="Generate PDF" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        let btnAddRow = document.querySelector("#addRow");
+        let btnDeleteRow = document.querySelectorAll("#deleteRow");
+        let form = document.querySelector("#form");
+        let massarInput = document.querySelectorAll("#massar");
+        let noteInput = document.querySelectorAll("#note");
+        let noteMin = document.querySelector("#form > table > tfoot > tr > td:nth-child(2)");
+        let noteMax = document.querySelector("#form > table > tfoot > tr > td:nth-child(4)");
+        let noteClasse = document.querySelector("#form > table > tfoot > tr > td:nth-child(6)");
+        let db = [1];
+        
+        let row = document.querySelector("body > div > div > form > table > tbody > tr:nth-child(1)");
+        var count = 1;
+        var addedCount = 1;
+        var dynamicCount = row.parentElement.childElementCount;
+
+        // let newRow = document.createElement("tr");
+
+        // let newRow = row.cloneNode(true);
+        let table = row.parentElement;
+        // let lastRow = table.lastElementChild;
+        
+        // let newOptPassable = document.createElement('option');
+        // newOptPassable.value = "passable";
+        // newOptPassable.innerHTML = "Passable";
+        
+        // let newOptABien = document.createElement('option');
+        // newOptABien.value = "abien";
+        // newOptABien.innerHTML = "Assez";
+        
+        // let newOptBien = document.createElement('option');
+        // newOptBien.value = "bien";
+        // newOptBien.innerHTML = "Bien";
+        
+        // let newOptTBien = document.createElement('option');
+        // newOptTBien.value = "tbien";
+        // newOptTBien.innerHTML = "Très bien";
+
+        window.onload = function () {
+    
+            btnAddRow.addEventListener("click", ()=>{
+                let newRow = row.cloneNode(true);
+                // let table = row.parentElement;
+                // let lastRow = table.lastElementChild;
+                
+                count++;
+                addedCount++;
+                newRow.children[0].childNodes[0].value = addedCount;
+                db.push(addedCount);
+    
+                Array.from(newRow.children).forEach(element => {
+                    if (element.childNodes[0].nodeName != "BUTTON") {
+                        if (element.childNodes[0].nodeName != "#text") {
+                            element.childNodes[0].name += addedCount;
+                        } else {
+                            element.childNodes[1].name += addedCount;
+                        }
+                    }
+                });
+    
+                // table.insertBefore(newRow, lastRow);
+                table.appendChild(newRow);
+                refresh();
+            })
+    
+            function refresh() {
+                
+                btnDeleteRow = document.querySelectorAll("#deleteRow");
+                btnDeleteRow.forEach(button => {
+                    button.addEventListener("click", (ev)=>{
+                        count--;
+                        
+                        const rowID = Number(ev.target.parentElement.parentElement.children[0].children.id.value);
+                        // var tempDB = [];
+                        db.forEach((elm, index) => {
+                            if(elm === rowID) {
+                                // tempDB = db.filter((_, index) => index !== rowID);
+                                delete db[index];
+                            }
+                        })
+                        // db = tempDB;
+                        ev.target.parentElement.parentElement.remove();
+                    })
+                });
+                
+                massarInput = document.querySelectorAll("#massar");
+                massarInput.forEach(input => {
+                    input.addEventListener("input", ()=>{
+                        const value = input.value;
+                        const regex = /^[A-Z][0-9]{8}$/;
+        
+                        setTimeout(()=> {
+                            if(!regex.test(value)) {
+                                if (value.length!=0) {
+                                    console.log("regex test failed");
+                                    input.style.borderWidth = "revert";
+                                    input.style.borderColor = "red";
+                                } else {
+                                    input.style.borderWidth = "";
+                                    input.style.borderColor = "";
+                                }
+                            }  else {
+                                console.log("regex test succeeded");
+                                input.style.borderWidth = "revert";
+                                input.style.borderColor = "green";
+                            }
+                        }, 500)
+                    })
+                })
+                
+                noteInput = document.querySelectorAll("#note");
+                noteInput.forEach(input => {
+                    input.addEventListener("input", ()=>{
+                        const value = input.value;
+                        const regex = /^(20|[0-9]|1[0-9])(\.[0-9]{1,2})?$/;
+                        // const regex = /^[0-9]{1,2}(\.[0-9]{1,2})?$/;
+                        // const regex = /^[0-9]{1,2}\.?[0-9]{0,2}$/;
+                        // const regex = /^[0-9]{1,2}[\.]{0,1}[0-9]{0,2}$/;
+        
+                        setTimeout(()=> {
+                            if(!regex.test(value)) {
+                                if (value.length!=0) {
+                                    console.log("regex test failed");
+                                    input.style.borderWidth = "revert";
+                                    input.style.borderColor = "red";
+                                } else {
+                                    input.style.borderWidth = "";
+                                    input.style.borderColor = "";
+                                }
+                            }  else {
+                                console.log("regex test succeeded");
+                                input.style.borderWidth = "revert";
+                                input.style.borderColor = "green";
+                                
+                            }
+                        }, 500)
+    
+                        if (value.match(10)) {
+                            input.parentElement.nextElementSibling.children.appreciation.selectedIndex = 0;
+                        } else if (value.match(12)) {
+                            input.parentElement.nextElementSibling.children.appreciation.selectedIndex = 1;
+                        } else if (value.match(14)) {
+                            input.parentElement.nextElementSibling.children.appreciation.selectedIndex = 2;
+                        } else if (value.match(16)) {
+                            input.parentElement.nextElementSibling.children.appreciation.selectedIndex = 3;
+                        }
+                    })
+                })
+        
+            }
+
+            form.addEventListener("submit", (event)=>{
+                event.preventDefault();
+                const id = document.querySelector("#id").value;
+                console.log("id");
+            })
+            
+        }
+
+    </script>
+</body>
+</html>
