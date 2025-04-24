@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body style="background-color: #212726; color: aliceblue;">
-    <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="d-flex justify-content-center align-items-center vh-100" id="toPrint">
         <div class="w-75">
             <form action="" method="post" id="form">
                 <div class="mb-3">
@@ -71,10 +71,11 @@
                         </tr>
                     </tfoot>
                 </table>
-                <input type="submit" id="generatePDF" value="Generate PDF" class="btn btn-success">
+                <button type="button" id="generatePDF" class="btn btn-success">Generate PDF</button>
             </form>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         let btnAddRow = document.querySelector("#addRow");
@@ -86,6 +87,7 @@
         let noteMax = document.querySelector("#form > table > tfoot > tr > td:nth-child(4)");
         let noteClasse = document.querySelector("#form > table > tfoot > tr > td:nth-child(6)");
         let db = [1];
+        let btnGenerate = document.querySelector("#generatePDF");
         
         let row = document.querySelector("body > div > div > form > table > tbody > tr:nth-child(1)");
         var count = 1;
@@ -115,6 +117,29 @@
         // newOptTBien.innerHTML = "Très bien";
 
         window.onload = function () {
+
+            btnGenerate.addEventListener("click", ()=>{
+                // const now = new Date();
+                // const year = now.getFullYear();
+                // const month = String(now.getMonth() + 1).padStart(2, '0'); 
+                // const day = String(now.getDate()).padStart(2, '0');
+                // const hours = String(now.getHours()).padStart(2, '0');
+                // const minutes = String(now.getMinutes()).padStart(2, '0');
+                // const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                // const formatted = `${year}-${month}-${day}-${hours}:${minutes}:${seconds}`;
+                
+                var toPrint = document.getElementById("toPrint");
+                var opt = {
+                    margin:       1,
+                    filename:     'massar.pdf',
+                    // filename:     'massar-' + formatted + '.pdf',
+                    image:        { type: 'png', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(toPrint).save();
+            })
     
             btnAddRow.addEventListener("click", ()=>{
                 let newRow = row.cloneNode(true);
